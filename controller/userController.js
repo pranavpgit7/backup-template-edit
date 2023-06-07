@@ -55,7 +55,10 @@ module.exports = {
                 req.session.user = response.users
                 let users = req.session.user
                 // console.log('iffff', users);
-                res.render('user/home', { layout: 'Layout', users })
+                bannerModel.Banner.find().then((banner)=>{
+                    console.log(banner,'bannerr');
+                    res.render('user/home', { layout: 'Layout',users,banner})
+                })
             } else {
                 // console.log('elseeee');
                 res.render('user/login', { layout: 'Layout', users })
@@ -143,6 +146,22 @@ module.exports = {
     //     })
     // },
     getShopPage: async (req, res) => {
+
+    //     let searchOptions = {};
+
+    // //using req.query instead of req.body because it is using get method**
+    // if(req.query.name != null && req.query.name !== '')
+    // {
+    //     searchOptions.name = new RegExp(req.query.name, 'i'); //here i means case insensitive, regExpr is used for auto-completion while checking or searching authors, because that is how it works
+    // }
+
+    // try{
+    //     const authors = await Author.find(searchOptions);
+    //     res.render('authors/index', { authors : authors, searchOptions : req.query });
+    // }catch{
+    //     res.redirect('/');
+    // }
+
         try {
 
             let users = req.session.user ? req.session.user._id : null; 
