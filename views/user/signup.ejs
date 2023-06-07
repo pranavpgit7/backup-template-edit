@@ -93,19 +93,24 @@
             flag = 2
         }
 
-        if(emailValue == ""){
-            error2.innerText = "Email cant be empty"
-            flag = 2
-        }else if(!emailValue.match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)){
-            error2.innerText = " Enter a valid email"
-            flag = 2
+        if (emailValue === '') {
+        error2.innerText = 'Email cant be empty';
+        flag = 2;
+        } else if (!emailValue.match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)) {
+        error2.innerText = 'Enter a valid email';
+        flag = 2;
         }
 
-        if(passwordValue == ""){
-            error3.innerText = "Password cant be empty"
-            flag = 2
-        }else if(passwordValue < 8){
-            error3.innerText = "Password length should be atleast 8"
+        if (passwordValue === '') {
+        error3.innerText = 'Password cant be empty';
+        flag = 2;
+        } else if (passwordValue.length < 8) {
+        error3.innerText = 'Password length should be at least 8';
+        flag = 2;
+        } else if (!passwordValue.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/)) {
+        error3.innerText =
+            'Password should contain at least one uppercase letter, one digit, and one special character';
+        flag = 2;
         }
 
         if(cPasswordValue == ""){
