@@ -1,0 +1,363 @@
+<div>
+  <span><a href="/admin/dashboard">DASHBOARD</a> >> <a href="#">ADD CATEGORY</a></span>
+</div>
+
+<head>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+
+
+
+<section class="content-main">
+  <style>
+    span a {
+      font-weight: bold;
+      color: black;
+    }
+  </style>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-6 ml-200 pl-100">
+
+          <button type="button" class="btn btn-primary ml-150" id="add-category">Add Category</button>
+
+        </div>
+
+        <!-- category listing -->
+        <div class="col-lg-12 mt-60">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th class="text-center">
+
+          </div>
+          </th>
+          <th>No.</th>
+          <th>ID</th>
+          <th>Category</th>
+          <th>Sub Category</th>
+
+          <% categories.forEach(function(item, index) { %>
+            <th class="text-end"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="text-center">
+
+                </td>
+                <td>
+                  <%= index + 1 %>
+                </td>
+                <td>
+                  <%= item._id%>
+                </td>
+                <td>
+                  <%= item.category%>
+                </td>
+                <td><button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sub Category List
+                  </button>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <% item.sub_category.forEach(function(item) { %>
+                      <a class="dropdown-item" href="#">
+                        <%= item%>
+                      </a>
+                      <% }) %>
+                  </div>
+
+
+                </td>
+
+
+                <td class="text-end">
+                  <div>
+                    <a href="" onclick="Category('<%= item._id %>');event.preventDefault();" id="showModal"
+                      class="btn btn-sm font-sm rounded btn-brand">
+                      <i class="material-icons md-edit"></i> Edit
+                    </a>
+                    <a id="deleteProduct" onclick="deleteCategory('<%= item._id %>')" class="btn btn-sm font-sm btn-danger rounded">
+                      <i class="material-icons md-delete_forever"></i> Delete
+                    </a>
+                  </div>
+        </div> <!-- dropdown //end -->
+        </td>
+        </tr>
+        </tbody>
+        <% }) %>
+          </table>
+      </div>
+    </div> <!-- .col// -->
+  </div> <!-- .row // -->
+  </div> <!-- card body .// -->
+  </div> <!-- card .// -->
+</section> <!-- content-main end// -->
+
+
+<!-- addCategory modal -->
+
+<div class="modal fade" id="category-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-4">
+            <label for="product_name" class="form-label">Category</label>
+            <input type="text" placeholder="Type here" name="category" class="form-control" id="category" />
+            <p id="category-err" class="text-danger"></p>
+          </div>
+          <div class="mb-4">
+            <label for="product_name" class="form-label">Sub Category</label>
+            <input type="text" placeholder="Type here" name="subCategory" class="form-control" id="subCategory" />
+            <p id="subCategory-err" class="text-danger"></p>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submit-category">Add Category</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#add-category').click(function () {
+    $('#category-modal').modal('show');
+  });
+
+  // Hide modal on close button or background click
+  $('.close, .modal').click(function () {
+    $('.modal').hide();
+  });
+  $(document).ready(function () {
+
+
+    // Prevent modal from closing on modal content click
+    $('.modal-content').click(function (e) {
+      e.stopPropagation();
+    });
+
+
+    $('#category-modal').on('shown.bs.modal', function () {
+      $('#submit-category').click(function () {
+        const category = $('#category').val().trim();
+        const subCategory = $('#subCategory').val().trim();
+
+        const categoryError = $('#category-err');
+        const subCategoryError = $('#subCategory-err');
+        categoryError.text('');
+        subCategoryError.text('');
+
+        if (category == '') categoryError.text('Field is required');
+        if (subCategory == '') subCategoryError.text('Field is required')
+        if (!category == '' && !subCategory == '') {
+          $.ajax({
+            url: '/admin/addCategory',
+            method: 'post',
+            data: {
+              category: category,
+              sub_category: subCategory
+
+            },
+            success(response) {
+              if (response) {
+                swal({
+                  title: "Category Added Successfully",
+                  icon: "success",
+                  button: "OK",
+                }).then(() => {
+                  location.reload();
+                })
+
+                $('#category-modal').modal('hide');
+              } else {
+                swal({
+                  title: "Already Exist",
+                  icon: "error",
+                  button: "OK",
+                });
+              }
+            }
+          });
+        }
+      });
+    });
+  })
+</script>
+
+<!-- edit category  -->
+
+<div class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">EDIT CATEGORY</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+          <div class="card-body">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 ">
+                <form id="edit-category-form">
+                  <div class="mb-4">
+
+                    <label for="product_name" class="form-label">Category</label>
+
+                    <input id="editCategory" disabled="" type="text" placeholder="Type here" name="category"
+                      class="form-control" />
+                    <input id="editedcategory" type="text" placeholder="Type here" name="category"
+                      class="form-control" />
+
+                    <!-- <select>
+                      <option value="">Sub Category</option>
+                     
+                       
+                      <option id="subCat"></option>
+                  
+                      
+                    </select> -->
+
+                    <input style="display: none;" id="editCategoryId" type="text" placeholder="Type here" name="_id"
+                      class="form-control" />
+                    <p id="err" class="text-danger"></p>
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Update category</button>
+                  </div>
+                </form>
+              </div>
+            </div> <!-- .row // -->
+          </div> <!-- card body .// -->
+        </div> <!-- card .// -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // Show modal on button click
+    $('#showModal').click(function () {
+
+    });
+
+    // Hide modal on close button or background click
+    $('.close, .modal').click(function () {
+      $('.modal').hide();
+    });
+
+    // Prevent modal from closing on modal content click
+    $('.modal-content').click(function (e) {
+      e.stopPropagation();
+    });
+
+    $('#edit-category-form').submit(function (e) {
+      e.preventDefault();
+      const categoryId = $('#editCategoryId').val()
+
+      $.ajax({
+        url: '/admin/edit-category/' + categoryId,
+        type: 'patch',
+        data: $('#edit-category-form').serialize()
+      }).done(res => {
+        console.log('success');
+        location.reload();
+      }).fail(err => {
+
+      })
+    })
+  });
+
+  //edit category
+
+  function Category(categoryId) {
+
+    $.ajax({
+      url: '/admin/edit-category/' + categoryId,
+      type: 'get',
+    }).done(res => {
+      $('#editCategory').val(res.category);
+      $('#editCategoryId').val(res._id);
+
+      $('.modal').show()
+    }).fail(err => {
+
+    })
+  }
+
+  //delete category
+  function deleteCategory(catId) {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this category!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        $.ajax({
+          url: '/admin/api/delete-category/' + catId,
+          type: 'delete', // Use 'DELETE' as the request type
+          success(response) {
+              if (response.status) {
+                swal("Category has been deleted!", {
+                  icon: "success",
+                }).then(()=>{
+                  location.reload()
+                })
+              } else {
+                swal("Oops!", "Something went wrong. Category not deleted!", "error");
+              }
+            }
+          })
+      } else {
+        swal("Category is safe!");
+      }
+    });
+  }
+</script>
+
+<style>
+  /* Position modal in the center of the screen */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    overflow: auto;
+  }
+
+  /* Add overlay to the background */
+  .modal::before {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+</style>

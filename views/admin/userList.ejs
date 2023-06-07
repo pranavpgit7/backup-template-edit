@@ -1,0 +1,106 @@
+<dic class="container">
+
+    <div class="screen-overlay"></div>
+  
+    <main class="main-wrap mx-auto">
+  
+      <section class="content-main">
+        <div class="content-header">
+          <h2 class="content-title">Users</h2>
+        </div>
+        <div class="card mb-4">
+  
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+  
+                <thead>
+                  <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <!-- <th>Registered</th> -->
+                    <th></th>
+                    <th></th>
+  
+                  </tr>
+                </thead>
+                <% user.forEach(function(item) { %>
+                <tbody>
+                  <tr>
+                    <td width="40%">
+                      <a href="#" class="itemside">
+                        <!-- <div class="left">
+                                                  <img src="assets/imgs/people/avatar1.jpg" class="img-sm img-avatar" alt="Userpic">
+                                              </div> -->
+                        <div class="info pl-3">
+                          <h6 class="mb-0 title"><%= item.name %></h6>
+                          <small class="text-muted"> ID: <%= item._id %></small>
+                        </div>
+                      </a>
+                    </td>
+                    <td><%= item.email %></td>
+  
+                    <% if (item.status == true) { %>
+                    <td><span class="badge rounded-pill alert-success">Active</span></td>
+                    <% } else { %>
+                      <td><span class="badge rounded-pill alert-danger">Inactive</span></td>
+                      <% } %>
+  
+                    <!-- <td><%= new Date(item.createdAt).toDateString() %></td> -->
+  
+                    <td class="text-end">
+                   
+                      <button class="btn btn-info text-white"><a href="/admin/order-list/<%=item._id%>">Orders</a></button>
+                     
+                      <% if (item.status == true) { %>
+                      <button class="btn btn-danger text-white" onclick="changeUserStatus('<%= item._id %>',false)">Block</button>
+                      <% } else { %>
+                      <button class="btn btn-success text-white" onclick="changeUserStatus('<%= item._id %>',true)">UnBlock</button>
+                      <% } %>
+  
+                    </td>
+                    <td class="text-end">
+                    </td>
+  
+                  </tr>
+  
+                </tbody>
+                <% }); %>
+              </table> <!-- table-responsive.// -->
+            </div>
+          </div> <!-- card-body end// -->
+        </div> <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+              <li class="page-item active"><a class="page-link" href="#">01</a></li>
+              <li class="page-item"><a class="page-link" href="#">02</a></li>
+              <li class="page-item"><a class="page-link" href="#">03</a></li>
+              <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+              <li class="page-item"><a class="page-link" href="#">16</a></li>
+              <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+            </ul>
+          </nav>
+        </div>
+      </section> <!-- content-main end// -->
+  
+      </div>
+  
+      <script>
+        function changeUserStatus(userId, status) {
+  // Display a confirmation dialog
+  var confirmation = confirm("Are you sure you want to " + (status ? "block" : "unblock") + " this user?");
+  
+  if (confirmation) {
+    $.ajax({
+      url: '/admin/change_user_status/?id=' + userId + '&status=' + status,
+      method: 'PUT',
+      success(response) {
+        location.reload();
+      }
+    });
+  }
+}
+
+      </script>

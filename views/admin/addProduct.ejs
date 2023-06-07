@@ -1,0 +1,305 @@
+
+<div class="container">
+  <div class="screen-overlay"></div>
+  <main class="main-wrap mx-auto">
+    <section class="content-main">
+      <div class="row">
+        <div class="col-12">
+          <div class="content-header">
+            <h2 class="content-title">Add New Product</h2>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="card mb-4">
+            <div class="card-body">
+              <form class="myForm" id="myForm" method="post" action="/admin/add-product" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-lg-6 mb-3">
+                    <label for="product_name" class="form-label">Name</label>
+                    <input type="text" name="name" placeholder="Type here" class="form-control" id="name">
+                    <p id="error1" class="text-danger"></p>
+                  </div>
+                  <div class="col-lg-6 mb-3">
+                    <label for="product_brand" class="form-label">Brand</label>
+                    <input type="text" name="brand" placeholder="Type here" class="form-control" id="brand">
+                    <p id="error2" class="text-danger"></p>
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label">Description</label>
+                  <textarea placeholder="Type here" name="description" id="description" class="form-control" rows="4"></textarea>
+                  <p id="error3" class="text-danger"></p>
+                </div>
+                <div class="row">
+                  <div class="col-lg-4">
+                    <div class="mb-4">
+                      <label class="form-label">Price</label>
+                      <div class="row gx-2">
+                        <input placeholder="₹" name="price" id="price" min="1" step="0.5" type="text" class="form-control">
+                        <p id="error4" class="text-danger"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="mb-4">
+                      <label class="form-label">Quantity</label>
+                      <input name="quantity" id="quantity" type="number" min="1" max="100" required class="form-control">
+                      <p id="error5" class="text-danger"></p>
+                    </div>
+                  </div>
+                  <!-- <div class="col-lg-4">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category" id="category"> -->
+
+                      <!-- <option> </option> -->
+
+                    <!-- </select>
+                    <p id="error6" class="text-danger"></p>
+                  </div>  -->
+                  <!-- <div class="col-lg-4">
+                    <label class="form-label">Sub Category</label>
+                    <select class="form-select" name="sub_category" id="sub_category">
+                      <option value="">-- Please select a category first --</option>
+                    </select>
+                    <p id="error7" class="text-danger"></p>
+                  </div> -->
+
+
+                </div>
+
+            </div>
+          </div> <!-- card end// -->
+        </div>
+        <div class="col-lg-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h4>Media</h4>
+            </div>
+            <div class="input-upload">
+              <img src="/imgs/theme/upload.svg" id="imgView1" alt="">
+              <input class="form-control" id="input1" name="file" onchange="viewImage1(event)" type="file">
+            </div>
+            
+
+          </div> <!-- card end// -->
+        </div>
+        <div class="col-lg-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h4>Media</h4>
+            </div>
+            <div class="input-upload">
+              <img src="/imgs/theme/upload.svg" id="imgView2" alt="">
+              <input class="form-control" id="input2" name="file" onchange="viewImage2(event)" type="file">
+            </div>
+           
+          </div> <!-- card end// -->
+        </div>
+        <div class="col-lg-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h4>Media</h4>
+            </div>
+            <div class="input-upload">
+              <img src="/imgs/theme/upload.svg" id="imgView3" alt="">
+              <input class="form-control" id="input3" name="file" onchange="viewImage3(event)" type="file">
+            </div>
+           
+
+          </div> <!-- card end// -->
+        </div>
+        <div class="col-lg-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h4>Media</h4>
+            </div>
+            <div class="input-upload">
+              <img src="/imgs/theme/upload.svg" id="imgView4" alt="">
+              <input class="form-control" id="input4" name="file" onchange="viewImage4(event)" type="file">
+            </div>
+            
+
+          </div> <!-- card end// -->
+        </div>
+        <div>
+          <button type="button" onclick="validate()" class="btn  btn-primary rounded font-sm mr-5 hover-up">Save</button>
+          <a href="/admin/dashboard"> <button class="btn  btn-danger rounded font-sm hover-up">Cancel</button></a>
+        </div>
+      </div>
+      </form>
+    </section> <!-- content-main end// -->
+</div>
+
+<script>
+  function viewImage1(event) {
+    document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+  }
+
+  function viewImage2(event) {
+    document.getElementById('imgView2').src = URL.createObjectURL(event.target.files[0])
+  }
+
+  function viewImage3(event) {
+    document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
+  }
+
+  function viewImage4(event) {
+    document.getElementById('imgView4').src = URL.createObjectURL(event.target.files[0])
+  }
+</script>
+
+<!-- <script>
+  // Get the price input element
+  var priceInput = document.getElementById('price');
+
+  // Add an event listener to validate the input when it changes
+  priceInput.addEventListener('input', function () {
+    var price = parseFloat(priceInput.value);
+
+    // Check if the price is below 1
+    if (price < 1) {
+      document.getElementById('error4').textContent = "The price should be 1 or greater.";
+    } else {
+      document.getElementById('error4').textContent = "";
+    }
+  });
+</script> -->
+
+
+<script>
+  function validate() {
+    const priceValue = parseFloat(document.getElementById('price').value);
+    const quantityValue = parseInt(document.getElementById('quantity').value);
+
+    let error4 = document.getElementById('error4');
+    let error5 = document.getElementById('error5');
+
+    error4.innerText = '';
+    error5.innerText = '';
+
+    let flag = 1;
+
+    if (priceValue < 1) {
+      error4.innerText = "The price should be 1 or greater.";
+      flag = 2;
+    }
+
+    if (quantityValue < 1) {
+      error5.innerText = "The quantity should be 1 or greater.";
+      flag = 2;
+    }
+
+    // if (flag === 1) {
+    //   document.getElementById('myForm').submit();
+    // }
+
+    
+    const name = document.getElementById('name')
+    const brand = document.getElementById('brand')
+    const description = document.getElementById('description')
+    // const price = document.getElementById('price')
+    // const quantity = document.getElementById('quantity')
+    // const category = document.getElementById('category')
+    // const subCategory = document.getElementById('sub_category')
+
+    const nameValue = name.value.trim()
+    const brandValue = brand.value.trim()
+    const descriptionValue = description.value.trim()
+    // const priceValue = parseFloat(price.value)
+    // // const priceValue2 = parseFloat(priceValue.value);
+    // const quantityValue = quantity.value.trim()
+    // const categoryValue = category.value.trim()
+    // const subCategoryValue = subCategory.value.trim()
+
+    const error1 = name.parentElement.querySelector('p')
+    const error2 = brand.parentElement.querySelector('p')
+    const error3 = description.parentElement.querySelector('p')
+    error4 = price.parentElement.querySelector('p')
+    error5 = quantity.parentElement.querySelector('p')
+    // const error6 = category.parentElement.querySelector('p')
+    // const error7 = subCategory.parentElement.querySelector('p')
+
+    error1.innerText = ''
+    error2.innerText = ''
+    error3.innerText = ''
+    error4.innerText = ''
+    error5.innerText = ''
+    // error6.innerText = ''
+    // error7.innerText = ''
+
+    //   flag = 1
+    // if (priceValue2 < 1) {
+    //   error4.innerText = "The price should be 1 or greater.";
+    // }
+    if (nameValue == '') {
+      error1.innerText = "Product Name is required"
+      flag = 2
+    }
+    if (brandValue == '') {
+      error2.innerText = "Brand Name is required"
+      flag = 2
+    }
+    if (descriptionValue == '') {
+      error3.innerText = "Description is required"
+      flag = 2
+    }
+    if (priceValue == '') {
+      error4.innerText = "Price is required"
+      flag = 2
+    }
+    if (quantityValue == '') {
+      error5.innerText = "Quantity is required"
+      flag = 2
+    }
+    if (nameValue === descriptionValue) {
+      error1.innerText = 'Name and description cannot have the same value';
+      error3.innerText = 'Name and description cannot have the same value';
+      flag = 2;
+    }
+    //  if (categoryValue == '') {
+    //   error6.innerText = "Category is required"
+    //   flag = 2
+    // }
+    // if(subCategoryValue == ''){
+    //   error7.innerText = 'Sub Category is required'
+    //   flag = 2
+    // }
+    const descSubstringCount = countSubstringOccurrences(descriptionValue);
+    const titleSubstringCount = countSubstringOccurrences(nameValue);
+    const brandSubstringCount = countSubstringOccurrences(brandValue);
+    function countSubstringOccurrences(str) {
+    const words = str.split(' ');
+    const frequency = {};
+
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      frequency[word] = (frequency[word] || 0) + 1;
+      if (frequency[word] > 1) {
+        return frequency[word];
+      }
+    }
+    return 0;
+  }
+
+  if (titleSubstringCount > 1) {
+  error3.innerText = 'Repeated substring not allowed';
+  flag = 2;
+  }
+
+  if (brandSubstringCount > 1) {
+  error3.innerText = 'Repeated substring not allowed';
+  flag = 2;
+  }
+
+  if (descSubstringCount > 1) {
+  error3.innerText = 'Repeated substring not allowed';
+  flag = 2;
+  }
+
+    if (flag == 1) {
+      document.getElementById('myForm').submit()
+    }
+  }
+
+</script>

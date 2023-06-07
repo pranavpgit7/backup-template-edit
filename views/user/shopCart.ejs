@@ -1,0 +1,313 @@
+<div class="mobile-header-active mobile-header-wrapper-style">
+  <div class="mobile-header-wrapper-inner">
+    <div class="mobile-header-top">
+      <div class="mobile-header-logo">
+        <a href="index.html"><img src="frontEnd/imgs/theme/logo.svg" alt="logo"></a>
+      </div>
+      <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+        <button class="close-style search-close">
+          <i class="icon-top"></i>
+          <i class="icon-bottom"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-header-content-area">
+      <div class="mobile-search search-style-3 mobile-header-border">
+        <form action="#">
+          <input type="text" placeholder="Search for items…">
+          <button type="submit"><i class="fi-rs-search"></i></button>
+        </form>
+      </div>
+      <div class="mobile-menu-wrap mobile-header-border">
+      </div>
+      <div class="mobile-header-info-wrap mobile-header-border">
+      </div>
+      <div class="mobile-social-icon">
+        <h5 class="mb-15 text-grey-4">Follow Us</h5>
+        <a href="#"><img src="frontEnd/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+        <a href="#"><img src="frontEnd/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+        <a href="#"><img src="frontEnd/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+        <a href="#"><img src="frontEnd/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+        <a href="#"><img src="frontEnd/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="main">
+  <div class="page-header breadcrumb-wrap">
+  </div>
+  <% if (count > 0) { %>
+  <section class="mt-50 mb-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table shopping-summery text-center clean">
+              <thead>
+                <tr class="main-heading">
+                  <th scope="col">Image</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Subtotal</th>
+                  <th scope="col">Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><% cartItems.reverse().forEach(function(item,index) { %>
+                  
+
+
+                  <td class="image"><img src="/productImages/<%=item.carted.img[0]%>" alt="#"></td>
+                  <td class="product-des">
+                    <h5 class="product-name"><a href="shop-product-right.html"></a></h5>
+                    <p class="font-xs"><%=item.carted.name%><br>
+                    </p>
+                  </td>
+                  <% if(item.carted.discountedPrice > 0) { %>
+                  <td class="price" data-title="Price"><span>₹<%=item.carted.discountedPrice%></span></td>
+                  <% } else { %>
+                  <td class="price" data-title="Price"><span>₹<%=item.carted.price%></span></td>
+                  <% } %>
+                  <td class="text-center" data-title="Stock">
+                    <div class="detail-qty border radius m-auto d-flex justify-content-center">
+                      <button class="qty-btn" onclick="changeQuantity('<%= item._id %>','<%=item.item%>','<%=user._id%>','<%=index%>',-1)"><i class="fi-rs-angle-small-down"></i></button>
+                      <span id="qty-val-<%= item.item %>" class="qty-val"><%= item.quantity %></span>
+                      <button class="qty-btn" onclick="changeQuantity('<%= item._id %>','<%=item.item%>','<%=user._id%>','<%=index%>',1)"><i class="fi-rs-angle-small-up"></i></button>
+                    </div>
+                  </td>
+                  
+
+                  <td class="text-right" data-title="Cart">
+                   <span id="subTotal-<%=item.item%>" class="subTotalVal">₹<%=subTotal.totals[index]%></span> 
+                  </td>
+                  <td class="action" data-title="Remove"><a href="#" class="text-muted" onclick="deleteProduct('<%=item._id%>','<%=item.item%>')"><i class="fi-rs-trash"></i></a></td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+          <div class="cart-action text-end">
+            <a class="btn " href="/shop"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+          </div>
+          <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
+          <div class="row mb-50">
+            <!-- <div class="col-lg-6 col-md-12">
+              <div class="mb-30 mt-50">
+                <div class="heading_s1 mb-3">
+                  <h4>Apply Coupon</h4>
+                </div>
+                <div class="total-amount">
+                  <div class="left">
+                    <div class="coupon">
+                      <form action="#" target="_blank">
+                        <div class="form-row row justify-content-center">
+                          <div class="form-group col-lg-6">
+                            <input class="font-medium" name="Coupon" placeholder="Enter Your Coupon">
+                          </div>
+                          <div class="form-group col-lg-6">
+                            <button class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+          </div>
+          <div class="col-lg-6 col-md-12">
+            <div class="border p-md-4 p-30 border-radius cart-totals">
+              <div class="heading_s1 mb-3">
+                <h4>Cart Totals</h4>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td class="cart_total_label">Cart Subtotal</td>
+
+                      <td class="cart_total_amount">₹<span class="font-lg fw-900 text-brand" id="subTotal"><%=total %></span></td>
+
+                    </tr>
+                    <tr>
+                      <td class="cart_total_label">Shipping</td>
+                      <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                    </tr>
+                    <tr>
+                      <td class="cart_total_label">Total</td>
+
+                      <td class="cart_total_amount">₹<strong><span class="font-xl fw-900 text-brand" id="total"><%=total %></span></strong></td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <a href="/check-out" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <% } else { %>
+    <div class="empty-cart-container ">
+      <div class="empty-cart ">
+        <br>
+        <br>
+        <br>
+        <br>
+        <h2>Cart is empty</h2>
+        
+        <!-- <img src="/frontEnd/imgs/theme/shopping-cart.png" alt="Empty Cart"> -->
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <a href="/shop"><p>Back to Shopping!!</p></a>
+      </div>
+    </div>
+    <% } %>
+</main>
+<style>
+  .qty-btn {
+    background-color: #f8f8f8;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 14px;
+    
+  }
+
+  .empty-cart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .empty-cart {
+    text-align: center;
+    width: 25%;
+    margin-top: 5%; 
+    margin-bottom: 5%; 
+    
+  }
+
+  .empty-cart img {
+    max-width: 100%;
+    height: auto;
+  }
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+<script>
+  //to change the quantity of products in cart
+
+  function changeQuantity(cartId, proId, userId, index, count) {
+    const quantity = document.getElementById(`qty-val-${proId}`).innerHTML;
+    const subTotal = document.getElementById(`subTotal-${proId}`).innerText;
+    console.log(index,'index')
+    count = parseInt(count)
+    if (quantity == 1 && count == -1) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        timer: 3000
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: '/change-product-quantity',
+            method: 'PATCH',
+            data: {
+              cartId: cartId,
+              proId: proId,
+              userId: userId,
+              count: count,
+              quantity: quantity
+            },
+            success: (response) => {
+              console.log(response.status,'ll');
+              if (response.status) {
+                location.reload()
+
+              }
+            }
+          })
+        }
+      })
+    } else {
+      $.ajax({
+        url: '/change-product-quantity',
+        method: 'PATCH',
+        data: {
+          cartId: cartId,
+          proId: proId,
+          userId: userId,
+          count: count,
+          quantity: quantity
+        },
+        success: (response) => {
+          if (response.status) {
+            const qtyElem = document.querySelector(`#qty-val-${proId}`);
+            qtyElem.innerText = response.newQuantity;
+            const subTotalVal = document.querySelector(`#subTotal-${proId}`);
+            subTotalVal.innerText = '₹' + response.subTotal.totals[index];
+            document.getElementById('subTotal').innerHTML = response.total
+            document.getElementById('total').innerHTML = response.total
+            // location.reload()
+          }else{
+            Swal.fire({
+        icon: 'warning',
+        title: response.message,
+        showConfirmButton: false,
+        timer : 4000
+      });
+          }
+        }
+      })
+    }
+
+  }
+
+
+  //to delete the product from cart
+
+  function deleteProduct(cartId, proId) {
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      timer: 3000
+    }).then((result) => {
+      if (result) {
+        $.ajax({
+          url: '/delete-product-cart',
+          method: 'DELETE',
+          data: {
+            cartId: cartId,
+            proId: proId
+          },
+          success: (response) => {
+            if (response.status) {
+              location.reload()
+            }
+          }
+        })
+      }
+    })
+
+  }
+</script>

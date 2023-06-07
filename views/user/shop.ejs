@@ -1,0 +1,218 @@
+<section class="mt-50 mb-50">
+  <div class="container">
+    <div class="row justify-content-center">
+
+
+      <header class="card-header bg-light bg-gradient rounded-3 mb-4 mx-auto" style="padding: 0.25rem;">
+        <form id="formId" class="row gx-3 align-items-center">
+          <div class="col-md-6">
+            <div class="input-group">
+              <span class="d-inline-block text-dark align-middle mt-10 mr-10"></span>
+              <input type="text" class="form-control form-control-lg border-0 bg-transparent text-dark" name="search" id="search" placeholder="Search here...">
+              <button type="button" class="btn btn-sm btn-dark ml-100" onclick="userQuery(1,event)">Search</button>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <span class="d-inline-block text-dark align-middle mt-10 mr-10 ml-100"></span>
+              <select name="sort" id="sort" class="form-select align-middle">
+                <option value="">Sort:</option>
+                <option value="-createdAt">Newest</option>
+                <option value="createdAt">Oldest</option>
+                <option value="-price">Price high to low</option>
+                <option value="price">Price low to high</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <span class="d-inline-block text-dark align-middle mt-10 mr-10 ml-100"></span>
+              <select name="filter" id="filter" class="form-select align-middle">
+                <option value="">Filter:</option>
+                <option value="category=Men">Men</option>
+                <option value="category=Women">Women</option>
+                <option value="category=Kid">Kids</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </header>
+
+
+      <div class="col-md-10 text-right">
+        <div class="row product-grid-3">
+
+         
+          <% product.forEach(function(item) { %>
+            <% if(item.unlist)  { %>
+          <div class="col-lg-4 col-md-4">
+            <div class="product-cart-wrap mb-30">
+              <div class="product-img-action-wrap">
+                <div class="product-img product-img-zoom">
+                  <a href="/product-details/<%= item._id%>">
+                    <img class="default-img" src="/productImages/<%= item.img[0]%>" alt="">
+                  </a>
+                </div>
+                <div class="product-action-1">
+                  <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                    <i class="fi-rs-search"></i>
+                  </a>
+                  <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#" onclick="">
+                    <i id="wishlist-icon" class="fi-rs-heart"></i>
+                  </a>
+                  <a aria-label="Compare" class="action-btn hover-up" href="#">
+                    <i class="fi-rs-shuffle"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="product-content-wrap">
+                <h2><a href="#"><%= item.name %></a></h2>
+                <div class="rating-result" title="90%"></div>
+                <div class="product-price">
+                  <% if (item.discountedPrice > 0) { %>
+                  <span class="discounted-price">₹<%= item.discountedPrice %></span>
+                  <small class="text-muted" style="text-decoration: line-through; margin-left: 10px;">₹<%= item.price %></small>
+                  <% } else { %>
+                  <span>₹<%= item.price %></span>
+                  <% } %>
+                </div>
+
+                <div class="product-action-1 show">
+                  <a aria-label="Add To Cart" class="action-btn hover-up" href="#" onclick="addToCart('<%=item.id%>')">
+                    <i class="fi-rs-shopping-bag-add"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" value="<%=productResult%>" id="search-status">
+          <%} else { %>   <%}%>
+          <% }); %>
+         
+          <input type="hidden" value="<%=productResult%>" id="search-status">
+      
+
+             
+
+
+
+          <!--pagination-->
+          <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-start">
+                <% if (currentPage > 1) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= currentPage - 1 %>"><i class="fi-rs-angle-double-small-left"></i></a></li>
+                <% } else { %>
+                <li class="page-item disabled"><span class="page-link"><i class="fi-rs-angle-double-small-left"></i></span></li>
+                <% } %>
+
+                <!-- Page Numbers -->
+                <!-- Page Numbers -->
+                <% for (let page = 1; page <= totalPages; page++) { %>
+                <% if (page === currentPage) { %>
+                <li class="page-item active" id="current-page-<%= page %>"><span class="page-link"><%= page %></span></li>
+                <% } else { %>
+                <li class="page-item " id="current-page-<%= page %>"><a class="page-link" href="?page=<%= page %>" data-page="<%= page %>"><%= page %></a></li>
+                <% } %>
+                <% } %>
+
+
+                <% if (currentPage < totalPages) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= currentPage + 1 %>"><i class="fi-rs-angle-double-small-right"></i></a></li>
+                <% } else { %>
+                <li class="page-item disabled"><span class="page-link"><i class="fi-rs-angle-double-small-right"></i></span></li>
+                <% } %>
+              </ul>
+            </nav>
+          </div>
+
+       
+        </div>
+      </div>
+    </div>
+</section>
+
+
+
+<script>
+  // add to cart ajax call
+  function addToCart(proId) {
+    $.ajax({
+      url: '/add-to-cart/' + proId,
+      method: 'POST',
+      data: {
+        proId: proId
+      },
+      success: (response) => {
+        if (response.status) {
+          location.reload()
+        } else if (response.error) {
+          Swal.fire({
+            icon: 'warning',
+            title: response.message,
+            showConfirmButton: false,
+            timer: 4000
+          })
+
+        }
+      }
+    })
+  }
+
+
+
+
+  //search ,sort,filter and pagination on shop
+  function userQuery(pageNumber = 1) {
+    event.preventDefault();
+    $.ajax({
+      url: '/shop',
+      method: 'GET',
+      data: $('#formId').serialize() + '&page=' + pageNumber,
+      success: function(response) {
+        if (response) {
+          var $response = $(response);
+          var $newProductGrid = $response.find('.product-grid-3');
+
+          $('.product-grid-3').replaceWith($newProductGrid);
+          let element = document.getElementById(`current-page-${pageNumber}`)
+          $('#current-page-1').removeClass('active')
+          $(`#current-page-${pageNumber}`).addClass('active')
+          const status = document.getElementById('search-status').value
+          if (status == 'true') {
+            Swal.fire({
+              icon: 'info',
+              title: 'Info',
+              text: 'Searched Products doesn\'t exist, Sorry!!',
+              timer: 3000
+            }).then(() => {
+              location.reload()
+
+            });
+
+          }
+
+        }
+
+      },
+
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  }
+
+
+  $(document).on('click', '.pagination .page-link', function(e) {
+    e.preventDefault();
+    let pageNumber = $(this).data('page');
+    userQuery(pageNumber);
+
+  });
+
+
+  $(document).on('click', '#searchBtn', function(e) {
+    e.preventDefault();
+    userQuery();
+  });
+</script>

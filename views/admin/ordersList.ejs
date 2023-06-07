@@ -1,0 +1,81 @@
+<section class="content-main">
+  <div class="content-header">
+    <div>
+      <h2 class="content-title card-title">Orders </h2>
+    </div>
+    <div>
+      <input type="text" placeholder="Search order ID" class="form-control bg-white">
+    </div>
+  </div>
+  <div class="card mb-4">
+    
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Total</th>
+              <th scope="col">Payment Status</th>
+              <th scope="col">Order Status</th>
+              <th scope="col">Date</th>
+              <!-- <th scope="col" class="text-end"> Action </th> -->
+            </tr>
+          </thead>
+       
+            <% order?.orders.forEach(function(order,index) { %>
+
+            
+
+          <tbody>
+            <tr>
+              <td><%=index + 1%></td>
+              <td><%=order.shippingAddress[0].item.fname%></td>
+              <td><template class="__cf_email__" data-cfemail="244041564d414a4164415c45495448410a474b49">[email&#160;protected]</template><%=order.shippingAddress[0].item.email%></td>
+              <td>₹ <%=order.totalPrice%></td>
+
+              <td>
+                <% if(order.paymentStatus === 'paid') { %>
+                <span class="badge rounded-pill alert-success"><%=order.paymentStatus%></span>
+                <% } else { %> 
+                <span class="badge rounded-pill alert-danger"><%=order.paymentStatus%></span>
+                <% } %>
+            </td>
+            
+              <td>
+                <% if(order.orderConfirm === 'canceled') { %>
+                <span class="badge rounded-pill alert-danger"><%=order.orderConfirm%></span>
+                <% } else { %>
+                <span class="badge rounded-pill alert-success"><%=order.orderConfirm%></span>
+                <% } %>
+ 
+            </td>
+              <td><%= new Date(order.createdAt).toDateString()%></td>
+              <td class="text-end">
+                <a href="/admin/order-details/?orderId=<%= order._id %>&userId=<%= userId%>" class="btn btn-md rounded font-sm">Detail</a>
+
+              </td>
+            </tr>
+          </tbody>
+
+          <% }); %>
+
+        </table>
+      </div> <!-- table-responsive //end -->
+    </div> <!-- card-body end// -->
+  </div> <!-- card end// -->
+  <!-- <div class="pagination-area mt-15 mb-50">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-start">
+        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+        <li class="page-item"><a class="page-link" href="#">02</a></li>
+        <li class="page-item"><a class="page-link" href="#">03</a></li>
+        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+        <li class="page-item"><a class="page-link" href="#">16</a></li>
+        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+      </ul>
+    </nav>
+  </div> -->
+</section> <!-- content-main end// -->

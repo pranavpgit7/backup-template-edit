@@ -1,0 +1,346 @@
+<section class="vh-100">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 text-black">
+  
+          <!-- <div class="px-5 ms-xl-4">
+            <i class="fas fa-crow fa-2x me-3 pt-5 mt-xl-4" style="color: #709085;"></i>
+            <span class="h1 fw-bold mb-0">Logo</span>
+          </div> -->
+  
+          <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+          
+            <form action="/login" id="loginPage" method="post" style="width: 23rem;">
+  
+              <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
+  
+              <div class="form-outline mb-4">
+                <input type="text" required="" name="email" placeholder="Your Email" />
+                <label class="form-label" for="form2Example18" name="email">Email address</label>
+                <!-- <p id="errorEmail" class="text-danger"></p> -->
+              </div>
+  
+              <div class="form-outline mb-4">
+                <input required="" type="password" name="password" placeholder="Password" />
+                <label class="form-label" for="form2Example28" name="password">Password</label>
+              </div>
+  
+              <div class="pt-1 mb-4">
+                <button class="btn btn-lg btn-block" type="submit" name="login" >Login</button>
+              </div>
+              <div class="text-muted text-center mb-15"><a href="#" id="get-otpLogin">Login with OTP</a></div>
+              <p class="small mb-5 pb-lg-2"><a  href="#" id="get-forgetPassword">Forgot password?</a></p>
+              <p>Don't have an account? <a href="/signup" class="link-info">Register here</a></p>
+  
+            </form>
+  
+          </div>
+  
+        </div>
+        <div class="col-sm-6 px-0 d-none d-sm-block">
+          <img src="https://img.freepik.com/free-photo/two-young-beautiful-smiling-hipster-girls-trendy-summer-sundresses_158538-16607.jpg?w=900&t=st=1683701780~exp=1683702380~hmac=fc04ac107d63cadba52d59a2c8b3dbd3cefd1fe3bcce0333cff38cffad8860c2"
+            alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+
+@media (min-width: 1025px) {
+.h-custom-2 {
+height: 100%;
+}
+}
+
+  </style>
+
+  
+<!--get otp login modal form-->
+<div class="modal fade" id="otp-login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div id="content-modal" class="modal-content">
+      <div id="verify-header" class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">OTP Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="otp-login-modal" class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="Mobile Number" class="form-label">Mobile Number</label>
+            <input type="number" class="form-control" name="mobileNumber" id="mobileNumber" required>
+            <small id="err" class="text-danger"></small>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary" id="send-otp">Send OTP</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $('#get-otpLogin').click(function() {
+
+    $('#otp-login').modal('show');
+
+
+  });
+
+  // Hide modal on close button or background click
+  $('.close, .modal').click(function() {
+
+    $('.modal').hide();
+  });
+  $(document).ready(function() {
+  // Prevent modal from closing on modal content click
+  $('.modal-content').click(function(e) {
+    e.stopPropagation();
+  });
+
+  $('#otp-login').on('shown.bs.modal', function() {
+    $('#send-otp').click(function(e) {
+      e.preventDefault()
+      const mobileNumber = $('#mobileNumber').val().trim();
+      const error = document.getElementById('err');
+      error.textContent = '';
+
+      if (mobileNumber === '') {
+        error.textContent = 'Mobile number is required';
+      } else {
+        $.ajax({
+          url: '/otp-login',
+          method: 'post',
+          data: {
+            mobileNumber: mobileNumber
+          },
+          success(response) {
+            console.log(response, '-----');
+            if (!response.error) {
+              setTimeout(appendVerifyForm(), 5000);
+            } else {
+              swal({
+                title: response.message,
+                icon: "error",
+                button: "OK",
+                timer: 5000
+              }).then(() => {
+                location.reload();
+              })
+            }
+          }
+        });
+      }
+    });
+  });
+
+  $('#otp-login form').submit(function(e) {
+    e.preventDefault();
+    $('#send-otp').click();
+  });
+});
+
+
+
+  
+
+
+
+  function verifyOtp() {
+
+    const otp = $('#otp').val();
+    $.ajax({
+      url: '/otp-verify',
+      type: 'post',
+      data: {
+        otp: otp
+      }
+    }).done(res => {
+      location.href = '/'
+    }).fail(err => {
+
+    })
+
+
+  }
+
+  function appendVerifyForm() {
+  $('#otp-login-modal').remove()
+  $('#verify-header').remove()
+
+  $(` <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Verify OTP </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form id="otp-verify">
+        <div class="mb-3">
+          <label for="Mobile Number" class="form-label">Verify Code</label>
+          <input id="otp" type="number" class="form-control" name="otp" id="otp" required>
+        </div>
+        <div class="d-grid gap-2">
+          <button type="button" onclick="verifyOtp()" class="btn btn-primary" id="send-otp" >Send OTP</button>
+        </div>
+      </form>
+    </div>`).appendTo('#content-modal')
+
+  let timer = 30; // Set the timer in seconds
+  let countDown; // Declare the countdown variable
+  const timerEl = $('<small class="text-danger">Time remaining: 30 seconds</small>').appendTo('#content-modal');
+
+  // Countdown function
+  const startCountDown = () => {
+    countDown = setInterval(() => {
+      timer--;
+      timerEl.text(`Time remaining: ${timer} seconds`);
+      if (timer === 0) {
+        clearInterval(countDown);
+        timerEl.text('Time up! Please try again.');
+        $('#send-otp').attr('disabled', 'disabled');
+        $('#resend-otp').removeAttr('disabled');
+      }
+    }, 1000);
+  };
+  
+  startCountDown(); // Start the countdown initially
+
+  // Resend OTP button
+  $('<button type="button" class="btn btn-link btn-sm" id="resend-otp" disabled>Resend OTP</button>')
+    .appendTo('#content-modal')
+    .click(() => {
+      $('#resend-otp').attr('disabled', 'disabled');
+      $('#send-otp').removeAttr('disabled');
+      clearInterval(countDown);
+      timer = 30;
+      timerEl.text(`Time remaining: ${timer} seconds`);
+      startCountDown(); // Start the countdown again
+      // TODO: add code to resend the OTP using Twilio
+      $.ajax({
+      url: '/resend-otp',
+      method: 'post',
+      
+      success(response) {
+        console.log(response);
+        
+      },
+      error(jqXHR, textStatus, errorThrown) {
+        console.error(textStatus, errorThrown);
+        // Handle the error
+      }
+    });
+});
+
+}
+
+
+
+</script>
+
+<style>
+  /* Position modal in the center of the screen */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    overflow: auto;
+  }
+
+  /* Add overlay to the background */
+  .modal::before {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+</style>
+
+
+
+
+
+<!-- FORGET PASSWORD -->
+
+<div class="modal fade" id="forget-password" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 300px;">
+    <div class="modal-content">
+      <div class="card-header h5 text-white bg-primary">Password Reset</div>
+      <div class="card-body px-5">
+        <p class="card-text py-2">
+          Enter your email address and we'll send you an email with instructions to reset your password.
+        </p>
+        <div class="form-outline">
+          <input type="email" id="typeEmail" class="form-control my-3" />
+          <label class="form-label" for="typeEmail">Email input</label>
+        </div>
+        <button class="btn btn-primary w-100" id="send-otp">Reset password</button>
+        <div class="d-flex justify-content-between mt-4">
+          <a class="" href="#">Login</a>
+          <a class="" href="#">Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    display: none;
+  }
+</style>
+
+<div class="card text-center" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 300px;">
+  <!-- Rest of the card code -->
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('#send-otp').click(function(e) {
+      e.preventDefault();
+      const email = $('#typeEmail').val().trim();
+      const error = document.getElementById('err');
+      error.textContent = '';
+      
+      if (email === '') {
+        error.textContent = 'Email is required';
+      } else {
+        $.ajax({
+          url: '/send-otp',
+          method: 'post',
+          data: {
+            email: email
+          },
+          success(response) {
+            console.log(response, '-----');
+            if (!response.error) {
+              swal({
+                title: "Password Reset",
+                text: "An email with instructions to reset your password has been sent to your email address.",
+                icon: "success",
+                button: "OK",
+                timer: 5000
+              });
+            } else {
+              swal({
+                title: "Error",
+                text: response.message,
+                icon: "error",
+                button: "OK",
+                timer: 5000
+              });
+            }
+          }
+        });
+      }
+    });
+  });
+</script>
